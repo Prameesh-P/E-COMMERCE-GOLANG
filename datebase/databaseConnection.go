@@ -1,6 +1,7 @@
 package datebase
 
 import (
+	"fmt"
 	_ "github.com/jackc/pgx/v5"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -22,5 +23,6 @@ func DBConnection() *gorm.DB {
 		log.Fatalf("Unable to connect Database %v \n", err)
 	}
 	defer db.Close()
+	fmt.Println("Connected to postgres..!!!!")
 	return db
 }
