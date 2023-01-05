@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"net/http"
-
+	"github.com/Prameesh-P/E-COMMERCE/database"
 	"github.com/Prameesh-P/E-COMMERCE/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -38,7 +38,13 @@ func SignUp(c *gin.Context){
 		c.Abort()
 		return
 	}
-	
+	record:=database.DB.Create(&user)
+	if record.Error !=nil {
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"err":record.Error.Error(),
+		})
+	}
+
 
 }
 
