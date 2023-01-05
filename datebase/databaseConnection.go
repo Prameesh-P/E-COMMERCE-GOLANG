@@ -2,27 +2,43 @@ package datebase
 
 import (
 	"fmt"
-	_ "github.com/jackc/pgx/v5"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 	"os"
+
+	"github.com/Prameesh-P/E-COMMERCE/models"
+	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var (
-	host     = os.Getenv("HOST")
-	port     = os.Getenv("ADDR")
-	user     = os.Getenv("USER")
-	password = os.Getenv("PASSWORD")
-	dbName   = os.Getenv("DBNAME")
-)
+func init()  {
+		Getenv()
+}
 
-func DBConnection() *gorm.DB {
-	db, err := gorm.Open("pgx", "host=%s port=%s dbname=%s user=%s password=%s", host, port, user, password, dbName)
+var DB *gorm.DB
+
+func DBConnection(){
+	var err error
+	host    := os.Getenv("HOST")
+	port     := os.Getenv("ADDR")
+	user     := os.Getenv("USER")
+	password := os.Getenv("PASSWORD")
+	dbName   := os.Getenv("DBNAME")
 	if err != nil {
 		log.Fatalf("Unable to connect Database %v \n", err)
 	}
-	defer db.Close()
+	dsn:=fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",host,port,user,dbName,password)
+	DB,err:=gorm.Open(postgres.Open(dsn),&gorm.Config{})
+	if err!=nil {
+		fmt.Println("Error to connecting to database..!!")
+	}
+	DB.AutoMigrate(
+		&models.User{},
+	)
 	fmt.Println("Connected to postgres..!!!!")
-	return db
+}
+func Getenv()  {
+	if err:=godotenv.Load();err != nil {
+		fmt.Println("error loading env fil...")
+	}
 }
