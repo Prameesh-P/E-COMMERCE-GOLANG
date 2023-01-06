@@ -1,18 +1,15 @@
 package controllers
 
 import (
-	"net/http"
 	"github.com/Prameesh-P/E-COMMERCE/database"
+
+	"net/http"
 	"github.com/Prameesh-P/E-COMMERCE/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
-	var validate = validator.New()
-
-func Getusers() {
-
-}
+var validate = validator.New()
 
 func SignUp(c *gin.Context){ 
 	var user models.User
@@ -26,28 +23,24 @@ func SignUp(c *gin.Context){
 	ValidationErr:=validate.Struct(user)
 	if ValidationErr!=nil {
 		c.JSON(http.StatusBadRequest,gin.H{
-			"error":ValidationErr,
+			"ValidationError":ValidationErr,
 		})
 		c.Abort()
 		return   
 	}
 	if err := user.HashPassword(user.Password); err!= nil {
-		c.JSON(http.StatusBadRequest,gin.H{
-			"error":err.Error(),
+		c.JSON(404,gin.H{
+			"err":err.Error(),
 		})
 		c.Abort()
 		return
 	}
-	record:=database.DB.Create(&user)
-	if record.Error !=nil {
-		c.JSON(http.StatusInternalServerError,gin.H{
-			"err":record.Error.Error(),
-		})
-	}
-
-
+	record:=.DB.Create(&user)
+	c.JSON(200,gin.H{
+		"email":user.Email,
+		"msg":"Go to Loginpage",
+	})
 }
-
 
 func Login() {
 
