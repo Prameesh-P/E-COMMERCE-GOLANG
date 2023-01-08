@@ -107,3 +107,8 @@ func Login(c *gin.Context) {
 		"token":    tokenString,
 	})
 }
+func UserHome(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"success": "Welcome to user home page..!!",
+	})
+}

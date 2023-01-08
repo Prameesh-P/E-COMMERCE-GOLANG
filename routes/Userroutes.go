@@ -10,4 +10,5 @@ func Userroutes(incomingRoutes *gin.Engine) {
 
 	incomingRoutes.POST("/signup", c.SignUp)
 	incomingRoutes.POST("/login", c.Login)
+	incomingRoutes.GET("/userHome", c.UserHome)
 }
