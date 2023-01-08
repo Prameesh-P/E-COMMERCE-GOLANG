@@ -1,13 +1,13 @@
 package main
 
 import (
-	
-	d "github.com/Prameesh-P/E-COMMERCE/database"
+	d "github.com/Prameesh-P/E-COMMERCE/initializers"
 	"github.com/Prameesh-P/E-COMMERCE/routes"
 	"github.com/gin-gonic/gin"
 	"os"
 )
-func init()  {
+
+func init() {
 	d.Getenv()
 	d.DBConnection()
 }
@@ -22,7 +22,6 @@ func main() {
 
 	routes.Authroutes(router)
 	routes.Userroutes(router)
-
 
 	router.Run(":" + port)
 }

@@ -8,6 +8,6 @@ import (
 
 func Userroutes(incomingRoutes *gin.Engine) {
 
-	incomingRoutes.POST("/signup",c.SignUp)
-
+	incomingRoutes.POST("/signup", c.SignUp)
+	incomingRoutes.POST("/login", c.Login)
 }
