@@ -36,14 +36,14 @@ func SignUp(c *gin.Context) {
 		return
 	}
 	fmt.Println(users)
-	rec := initializers.DB.Create(&users)
-	if rec.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"err": rec.Error.Error(),
-		})
-	}
-	//stmt := `INSERT INTO users(id,first_name,last_name,email,password,phone,block_status,country,city,pincode) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
-	//initializers.DB.Exec(stmt, users.ID, users.First_Name, users.Last_Name, users.Email, users.Password, users.Phone, users.Block_status, users.Country, users.City)
+	//rec := initializers.DB.Create(&users)
+	//if rec.Error != nil {
+	//	c.JSON(http.StatusInternalServerError, gin.H{
+	//		"err": rec.Error.Error(),
+	//	})
+	//}
+	stmt := `INSERT INTO users(id,first_name,last_name,email,password,phone,block_status,country,city,pincode) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+	initializers.DB.Exec(stmt, users.ID, users.First_Name, users.Last_Name, users.Email, users.Password, users.Phone, users.Block_status, users.Country, users.City)
 	c.JSON(200, gin.H{
 		"email": users.Email,
 		"msg":   "Go to Loginpage",
@@ -111,4 +111,19 @@ func UserHome(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"success": "Welcome to user home page..!!",
 	})
+}
+func forgetPassword(c *gin.Context) {
+	var user models.User
+	userEmail := c.GetString("user")
+	newPassword := c.PostForm("password")
+	initializers.DB.Raw("SELECT * FROM users WHERE email=?", userEmail).Scan(&user)
+	if err := user.HashPassword(newPassword); err != nil {
+		c.JSON(404, gin.H{
+
+			"error": err.Error(),
+		})
+		c.Abort()
+		return
+	}
+
 }
